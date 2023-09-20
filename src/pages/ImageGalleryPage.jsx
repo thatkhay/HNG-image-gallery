@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { DndContext, useDraggable, useDroppable } from '@dnd-kit/core';
 import { CSS } from '@dnd-kit/utilities';
-import { Container, Paper, Button } from '@mui/material';
+import { Container,  Button } from '@mui/material';
 
 import Fall from '../assets/fall.jpg';
 import Winter from '../assets/winter.jpg';

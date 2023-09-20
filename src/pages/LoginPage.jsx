@@ -13,6 +13,7 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom'; // Import Link from react-router-dom
 import Footer from '../components/Footer';
 
+
 const LoginPage = () => {
   return (
     <motion.div
@@ -27,6 +28,7 @@ const LoginPage = () => {
         minHeight: '100vh',
       }}
     >
+    
       <Container  style={{width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: '100vh', flexDirection: 'column'}}>
         <AppBar position="static">
           <Toolbar>
