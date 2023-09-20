@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { DndContext, useDraggable, useDroppable } from '@dnd-kit/core';
 import { CSS } from '@dnd-kit/utilities';
-import { Container,  Button } from '@mui/material';
+import { Container, Button, TextField } from '@mui/material';
 
 import Fall from '../assets/fall.jpg';
 import Winter from '../assets/winter.jpg';
@@ -30,7 +30,7 @@ const Image = ({ src, alt, index }) => {
     transition: isDragging ? 'none' : 'transform 0.3s',
     boxShadow: isDragging ? '0px 0px 10px rgba(0, 0, 0, 0.3)' : 'none',
     borderRadius: '10px',
-    touchAction: 'none', // Enable touch-action property for smoother mobile touch support
+    touchAction: 'none',
   };
 
   return (
@@ -81,6 +81,7 @@ const DraggableImageGrid = () => {
   ];
 
   const [images, setImages] = useState(initialImages);
+  const [searchQuery, setSearchQuery] = useState('');
 
   const shuffleImages = () => {
     const shuffledImages = [...images];
@@ -103,8 +104,31 @@ const DraggableImageGrid = () => {
     }
   };
 
+  const filterImages = () => {
+    if (!searchQuery) {
+      return images;
+    }
+
+    return images.filter((src, index) =>
+      src.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  };
+
   return (
     <DndContext onDragEnd={onDragEnd}>
+      <Container>
+        <Button onClick={shuffleImages} variant="contained" color="primary">
+          Shuffle Images
+        </Button>
+        <TextField
+          label="Search Images"
+          variant="outlined"
+          fullWidth
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          style={{ marginTop: '1rem' }}
+        />
+      </Container>
       <div style={{ backgroundColor: 'black' }}>
         <Container
           style={{
@@ -121,14 +145,11 @@ const DraggableImageGrid = () => {
             borderRadius: '.6rem',
           }}
         >
-          {images.map((src, index) => (
+          {filterImages().map((src, index) => (
             <Image key={`image-${index}`} src={src} alt={`Image ${index + 1}`} index={index} />
           ))}
         </Container>
       </div>
-      <Button onClick={shuffleImages} variant="contained" color="primary">
-        Shuffle Images
-      </Button>
     </DndContext>
   );
 };

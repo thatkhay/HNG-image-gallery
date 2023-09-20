@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Container,
   Paper,
@@ -10,11 +10,34 @@ import {
   Toolbar,
 } from '@mui/material';
 import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom'; // Import Link from react-router-dom
+import { Link, useNavigate } from 'react-router-dom'; // Import useNavigate
 import Footer from '../components/Footer';
-
+import { app } from '../firebaseConfig';
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 
 const LoginPage = () => {
+  const auth = getAuth();
+  const navigate = useNavigate(); // Initialize useNavigate
+
+  const [data, setData] = useState({});
+
+  const handleInput = (e) => {
+    let newInput = { [e.target.name]: e.target.value };
+    setData({ ...data, ...newInput });
+  };
+
+  const handleFormSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await signInWithEmailAndPassword(auth, data.email, data.password);
+      console.log('signed in');
+      // Navigate to image gallery page upon successful login
+      navigate('/image-gallery');
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -28,18 +51,39 @@ const LoginPage = () => {
         minHeight: '100vh',
       }}
     >
-    
-      <Container  style={{width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: '100vh', flexDirection: 'column'}}>
+      <Container
+        style={{
+          width: '100%',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          height: '100vh',
+          flexDirection: 'column',
+        }}
+      >
         <AppBar position="static">
           <Toolbar>
             <Typography variant="h6">Nature and Animal Image Gallery</Typography>
           </Toolbar>
         </AppBar>
 
+        <Container style={{ marginTop: '2rem' }}>
+          <Typography variant="h4" gutterBottom>
+            Welcome to our Nature and Animal Image Gallery
+          </Typography>
+          <Typography variant="body1">
+            Explore the beauty of nature and the fascinating world of animals through our stunning image gallery. Immerse yourself in breathtaking landscapes, wildlife portraits, and captivating moments captured by talented photographers from around the globe.
+          </Typography>
+          <Typography variant="body1" style={{ marginTop: '1rem' }}>
+            Whether you have a passion for wildlife photography or simply appreciate the wonders of the natural world, you'll find a diverse collection of images that celebrate the Earth's rich biodiversity and scenic landscapes.
+          </Typography>
+        </Container>
+
         <Container component="main" maxWidth="xs">
           <Paper elevation={3} style={{ padding: '2rem', textAlign: 'center' }}>
             <Typography variant="h5">Login</Typography>
             <form
+              onSubmit={handleFormSubmit}
               noValidate
               style={{ marginTop: '1rem' }}
             >
@@ -54,6 +98,7 @@ const LoginPage = () => {
                     name="email"
                     autoComplete="email"
                     autoFocus
+                    onChange={handleInput}
                   />
                 </Grid>
                 <Grid item xs={12}>
@@ -66,6 +111,7 @@ const LoginPage = () => {
                     type="password"
                     id="password"
                     autoComplete="current-password"
+                    onChange={handleInput}
                   />
                 </Grid>
               </Grid>
@@ -84,7 +130,7 @@ const LoginPage = () => {
             </form>
           </Paper>
         </Container>
-        <Footer/>
+        <Footer />
       </Container>
     </motion.div>
   );
