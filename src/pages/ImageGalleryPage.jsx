@@ -5,6 +5,15 @@ import Fall from '../assets/fall.jpg';
 import Winter from '../assets/winter.jpg';
 import Summer from '../assets/summer.jpg';
 import Spring from '../assets/spring.jpg';
+import FallTwo from '../assets/fall2.jpg'; // New image
+import WinterTwo from '../assets/winter2.jpg'; // New image
+import SummerTwo from '../assets/summer2.jpg'; // New image
+import SpringTwo from '../assets/spring2.jpg'; // New image
+import FallThree from '../assets/fall3.jpg'; // New image
+import WinterThree from '../assets/winter3.jpg'; // New image
+import SummerThree from '../assets/summer3.jpg'; // New image
+import SpringThree from '../assets/spring3.jpg'; // New image
+import { Container } from '@mui/material';
 
 const Image = ({ src, alt, index, moveImage }) => {
   const [, ref] = useDrag({
@@ -52,7 +61,7 @@ const Image = ({ src, alt, index, moveImage }) => {
 };
 
 const DraggableImageGrid = () => {
-  const initialImages = [Fall, Winter, Summer, Spring];
+  const initialImages = [Fall, Winter, Summer, Spring, FallTwo, WinterTwo, SummerTwo, SpringTwo, FallThree, WinterThree, SummerThree, SpringThree];
 
   const [images, setImages] = useState(initialImages);
 
@@ -64,21 +73,30 @@ const DraggableImageGrid = () => {
   };
 
   return (
-    <DndProvider backend={HTML5Backend}>
-      <div
+    <DndProvider backend={HTML5Backend} >
+      <div style={{backgroundColor: 'black'}}>
+
+    
+      <Container
         style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', // Responsive column layout
           gap: '1rem', // Adjust gap between items for smaller screens
           width: '100%', // Make sure it spans the full width
           margin: '0 auto',
-          maxWidth: '700px', // Limit the width for larger screens
+          maxWidth: '700px',
+          height: '110vh',
+          border: '2px solid black  ',
+          padding: '1rem',
+          backgroundColor: 'skyblue',
+          borderRadius: '.6rem'
         }}
       >
         {images.map((src, index) => (
           <Image key={index} src={src} alt={`Image ${index + 1}`} index={index} moveImage={moveImage} />
         ))}
-      </div>
+      </Container>
+        </div>
     </DndProvider>
   );
 };
