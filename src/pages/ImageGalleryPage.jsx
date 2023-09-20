@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { DndContext, useDraggable, useDroppable } from '@dnd-kit/core';
 import { CSS } from '@dnd-kit/utilities';
-import { Container, Button, TextField } from '@mui/material';
+import { Container, Button, TextField, AppBar, Toolbar, Typography } from '@mui/material';
 
 import Fall from '../assets/fall.jpg';
 import Winter from '../assets/winter.jpg';
@@ -16,7 +16,22 @@ import WinterThree from '../assets/winter3.jpg';
 import SummerThree from '../assets/summer3.jpg';
 import SpringThree from '../assets/spring3.jpg';
 
-const Image = ({ src, alt, index }) => {
+const initialImages = [
+  { src: Fall, alt: 'Fall', tag: 'fall' },
+  { src: Winter, alt: 'Winter', tag: 'winter' },
+  { src: Summer, alt: 'Summer', tag: 'summer' },
+  { src: Spring, alt: 'Spring', tag: 'spring' },
+  { src: FallTwo, alt: 'Fall 2', tag: 'fall' },
+  { src: WinterTwo, alt: 'Winter 2', tag: 'winter' },
+  { src: SummerTwo, alt: 'Summer 2', tag: 'summer' },
+  { src: SpringTwo, alt: 'Spring 2', tag: 'spring' },
+  { src: FallThree, alt: 'Fall 3', tag: 'fall' },
+  { src: WinterThree, alt: 'Winter 3', tag: 'winter' },
+  { src: SummerThree, alt: 'Summer 3', tag: 'summer' },
+  { src: SpringThree, alt: 'Spring 3', tag: 'spring' },
+];
+
+const Image = ({ src, alt, index, tag }) => {
   const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
     id: `image-${index}`,
   });
@@ -60,26 +75,23 @@ const Image = ({ src, alt, index }) => {
           borderRadius: '10px',
         }}
       />
+      <div
+        style={{
+          position: 'absolute',
+          bottom: '10px',
+          left: '10px',
+          backgroundColor: 'rgba(255, 255, 255, 0.8)',
+          padding: '4px 8px',
+          borderRadius: '4px',
+        }}
+      >
+        {tag}
+      </div>
     </div>
   );
 };
 
 const DraggableImageGrid = () => {
-  const initialImages = [
-    Fall,
-    Winter,
-    Summer,
-    Spring,
-    FallTwo,
-    WinterTwo,
-    SummerTwo,
-    SpringTwo,
-    FallThree,
-    WinterThree,
-    SummerThree,
-    SpringThree,
-  ];
-
   const [images, setImages] = useState(initialImages);
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -109,15 +121,32 @@ const DraggableImageGrid = () => {
       return images;
     }
 
-    return images.filter((src, index) =>
-      src.toLowerCase().includes(searchQuery.toLowerCase())
+    return images.filter((image) =>
+      image.alt.toLowerCase().includes(searchQuery.toLowerCase())
     );
   };
 
   return (
     <DndContext onDragEnd={onDragEnd}>
-      <Container>
-        <Button onClick={shuffleImages} variant="contained" color="primary">
+      <Container
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          flexDirection: 'column',
+        }}
+      >
+        <AppBar position="static">
+          <Toolbar>
+            <Typography variant="h6">Nature and Animal Image Gallery</Typography>
+          </Toolbar>
+        </AppBar>
+        <Button
+          onClick={shuffleImages}
+          variant="contained"
+          color="primary"
+          style={{ marginTop: '2rem' }}
+        >
           Shuffle Images
         </Button>
         <TextField
@@ -126,17 +155,17 @@ const DraggableImageGrid = () => {
           fullWidth
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          style={{ marginTop: '1rem' }}
+          style={{ marginTop: '1rem', width: '50%', marginBottom: '2rem' }}
         />
       </Container>
-      <div style={{ backgroundColor: 'black' }}>
+      <div>
         <Container
           style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
             gap: '1rem',
-            width: '100%',
             margin: '0 auto',
+            width: '100%',
             maxWidth: '700px',
             height: '110vh',
             border: '2px solid black',
@@ -145,8 +174,14 @@ const DraggableImageGrid = () => {
             borderRadius: '.6rem',
           }}
         >
-          {filterImages().map((src, index) => (
-            <Image key={`image-${index}`} src={src} alt={`Image ${index + 1}`} index={index} />
+          {filterImages().map((image, index) => (
+            <Image
+              key={`image-${index}`}
+              src={image.src}
+              alt={image.alt}
+              tag={image.tag}
+              index={index}
+            />
           ))}
         </Container>
       </div>
