@@ -186,7 +186,7 @@ const DraggableImageGrid = () => {
           
         </Container>
       </div>
-      <ComplexSpinner/>
+   
     </DndContext>
   );
 };
