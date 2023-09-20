@@ -15,6 +15,7 @@ import FallThree from '../assets/fall3.jpg';
 import WinterThree from '../assets/winter3.jpg';
 import SummerThree from '../assets/summer3.jpg';
 import SpringThree from '../assets/spring3.jpg';
+import ComplexSpinner from '../components/Spinner';
 
 const initialImages = [
   { id: 'fall', src: Fall, alt: 'Fall', tag: 'fall' },
@@ -182,8 +183,10 @@ const DraggableImageGrid = () => {
               handleDragEnd={onDragEnd}
             />
           ))}
+          
         </Container>
       </div>
+      <ComplexSpinner/>
     </DndContext>
   );
 };
