@@ -14,12 +14,15 @@ import { Link, useNavigate } from 'react-router-dom'; // Import useNavigate
 import Footer from '../components/Footer';
 import { app } from '../firebaseConfig';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import  { toast } from 'react-toastify'
+import Spinner from '../components/Spinner';
 
 const LoginPage = () => {
   const auth = getAuth();
   const navigate = useNavigate(); // Initialize useNavigate
 
   const [data, setData] = useState({});
+  const [loading, setLoading] = useState(false); // Loading state
 
   const handleInput = (e) => {
     let newInput = { [e.target.name]: e.target.value };
@@ -28,6 +31,8 @@ const LoginPage = () => {
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true); // Set loading state to true
+
     try {
       await signInWithEmailAndPassword(auth, data.email, data.password);
       console.log('signed in');
@@ -35,6 +40,9 @@ const LoginPage = () => {
       navigate('/image-gallery');
     } catch (error) {
       console.log(error);
+      toast.error('invalid credentials')
+    } finally {
+      setLoading(false); // Set loading state to false when done
     }
   };
 
@@ -82,52 +90,57 @@ const LoginPage = () => {
         <Container component="main" maxWidth="xs">
           <Paper elevation={3} style={{ padding: '2rem', textAlign: 'center' }}>
             <Typography variant="h5">Login</Typography>
-            <form
-              onSubmit={handleFormSubmit}
-              noValidate
-              style={{ marginTop: '1rem' }}
-            >
-              <Grid container spacing={2}>
-                <Grid item xs={12}>
-                  <TextField
-                    variant="outlined"
-                    required
-                    fullWidth
-                    id="email"
-                    label="Email Address"
-                    name="email"
-                    autoComplete="email"
-                    autoFocus
-                    onChange={handleInput}
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <TextField
-                    variant="outlined"
-                    required
-                    fullWidth
-                    name="password"
-                    label="Password"
-                    type="password"
-                    id="password"
-                    autoComplete="current-password"
-                    onChange={handleInput}
-                  />
-                </Grid>
-              </Grid>
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                color="primary"
-                style={{ marginTop: '2rem' }}
+            {/* Conditional rendering based on loading state */}
+            {loading ? (
+             <Spinner/>
+            ) : (
+              <form
+                onSubmit={handleFormSubmit}
+                noValidate
+                style={{ marginTop: '1rem' }}
               >
-                Sign In
-              </Button>
-              <p>
-                Don't have an account? <span><Link to='/sign-up'>Sign up</Link></span>
-              </p>
-            </form>
+                <Grid container spacing={2}>
+                  <Grid item xs={12}>
+                    <TextField
+                      variant="outlined"
+                      required
+                      fullWidth
+                      id="email"
+                      label="Email Address"
+                      name="email"
+                      autoComplete="email"
+                      autoFocus
+                      onChange={handleInput}
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextField
+                      variant="outlined"
+                      required
+                      fullWidth
+                      name="password"
+                      label="Password"
+                      type="password"
+                      id="password"
+                      autoComplete="current-password"
+                      onChange={handleInput}
+                    />
+                  </Grid>
+                </Grid>
+                <Button
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  color="primary"
+                  style={{ marginTop: '2rem' }}
+                >
+                  Sign In
+                </Button>
+                <p>
+                  Don't have an account? <span><Link to='/sign-up'>Sign up</Link></span>
+                </p>
+              </form>
+            )}
           </Paper>
         </Container>
         <Footer />

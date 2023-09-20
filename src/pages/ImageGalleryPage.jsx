@@ -1,8 +1,16 @@
 import React, { useState, useCallback } from 'react';
 import { DndContext, useDraggable, useDroppable } from '@dnd-kit/core';
 import { CSS } from '@dnd-kit/utilities';
-import { Container, Button, TextField, AppBar, Toolbar, Typography } from '@mui/material';
+import {
+  Container,
+  TextField,
+  AppBar,
+  Toolbar,
+  Typography,
+} from '@mui/material';
+import ComplexSpinner from '../components/Spinner';
 
+// Import your image assets here
 import Fall from '../assets/fall.jpg';
 import Winter from '../assets/winter.jpg';
 import Summer from '../assets/summer.jpg';
@@ -15,7 +23,7 @@ import FallThree from '../assets/fall3.jpg';
 import WinterThree from '../assets/winter3.jpg';
 import SummerThree from '../assets/summer3.jpg';
 import SpringThree from '../assets/spring3.jpg';
-import ComplexSpinner from '../components/Spinner';
+import Spinner from '../components/Spinner';
 
 const initialImages = [
   { id: 'fall', src: Fall, alt: 'Fall', tag: 'fall' },
@@ -95,6 +103,7 @@ const Image = ({ src, alt, id, index, tag, handleDragEnd }) => {
 const DraggableImageGrid = () => {
   const [images, setImages] = useState(initialImages);
   const [searchQuery, setSearchQuery] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const onDragEnd = ({ active, over }) => {
     if (active && over && active.id !== over.id) {
@@ -117,6 +126,22 @@ const DraggableImageGrid = () => {
     return images.filter((image) => image.alt.toLowerCase().includes(searchQuery.toLowerCase()));
   }, [images, searchQuery]);
 
+  const handleSearch = () => {
+    setLoading(true);
+
+    // Simulate loading delay (You can remove this if you want instant results)
+    setTimeout(() => {
+      setLoading(false);
+    }, 3000); // Simulate loading delay of 3 seconds
+  };
+
+  const handleInputChange = (e) => {
+    setSearchQuery(e.target.value);
+
+    // Trigger search when the input value changes
+    handleSearch();
+  };
+
   return (
     <DndContext onDragEnd={onDragEnd}>
       <Container
@@ -132,27 +157,12 @@ const DraggableImageGrid = () => {
             <Typography variant="h6">Nature and Animal Image Gallery</Typography>
           </Toolbar>
         </AppBar>
-        <Button
-          variant="contained"
-          color="primary"
-          style={{ marginTop: '2rem' }}
-          onClick={() => {
-            const shuffledImages = [...images];
-            for (let i = shuffledImages.length - 1; i > 0; i--) {
-              const j = Math.floor(Math.random() * (i + 1));
-              [shuffledImages[i], shuffledImages[j]] = [shuffledImages[j], shuffledImages[i]];
-            }
-            setImages(shuffledImages);
-          }}
-        >
-          Shuffle Images
-        </Button>
         <TextField
           label="Search Images"
           variant="outlined"
           fullWidth
           value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
+          onChange={handleInputChange} // Trigger search on input change
           style={{ marginTop: '1rem', width: '50%', marginBottom: '2rem' }}
         />
       </Container>
@@ -172,21 +182,23 @@ const DraggableImageGrid = () => {
             borderRadius: '.6rem',
           }}
         >
-          {filteredImages().map((image, index) => (
-            <Image
-              key={`image-${index}`}
-              src={image.src}
-              alt={image.alt}
-              id={image.id}
-              tag={image.tag}
-              index={index}
-              handleDragEnd={onDragEnd}
-            />
-          ))}
-          
+          {loading ? (
+            <ComplexSpinner /> // Show the spinner while loading
+          ) : (
+            filteredImages().map((image, index) => (
+              <Image
+                key={`image-${index}`}
+                src={image.src}
+                alt={image.alt}
+                id={image.id}
+                tag={image.tag}
+                index={index}
+                handleDragEnd={onDragEnd}
+              />
+            ))
+          )}
         </Container>
       </div>
-   
     </DndContext>
   );
 };

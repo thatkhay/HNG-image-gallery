@@ -1,56 +1,31 @@
 import React from 'react';
 
-const ComplexSpinner = () => {
-  const spinnerContainerStyle = {
-    width: '100px',
-    height: '100px',
-    position: 'relative',
-    animation: 'spin 2s linear infinite',
+const Spinner = () => {
+  const spinnerStyle = {
+    container: {
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      height: '100vh',
+    },
+    spinner: {
+      border: '6px solid rgba(0, 0, 0, 0.3)',
+      borderTop: '6px solid #3498db',
+      borderRadius: '50%',
+      width: '50px',
+      height: '50px',
+      animation: 'spin 1s linear infinite',
+    },
   };
-
-  const spinnerItemStyle = {
-    width: '50px',
-    height: '50px',
-    position: 'absolute',
-    border: '4px solid transparent',
-    borderRadius: '50%',
-    animation: 'spin 1s cubic-bezier(0.25, 1, 0.5, 0.5) infinite',
-  };
-
-  const spinnerItemStyles = [];
-
-  const colors = ['#ff5733', '#33ff57', '#5733ff', '#ffff33', '#33ffff', '#ff33ff', '#333333'];
-
-  for (let i = 0; i < 7; i++) {
-    const itemStyle = {
-      ...spinnerItemStyle,
-      animationDelay: `-${0.9 - 0.1 * i}s`,
-      transform: `rotate(${45 * i}deg)`,
-      borderTopColor: colors[i], // Change the border color
-    };
-    spinnerItemStyles.push(itemStyle);
-  }
 
   return (
-    <div style={spinnerContainerStyle}>
-      {spinnerItemStyles.map((style, index) => (
-        <div
-          key={index}
-          style={{
-            ...style,
-            animation: 'spin 1s cubic-bezier(0.25, 1, 0.5, 0.5) infinite',
-          }}
-        ></div>
-      ))}
+    <div style={spinnerStyle.container}>
+      <div style={spinnerStyle.spinner}></div>
       <style>
         {`
           @keyframes spin {
-            0% {
-              transform: rotate(0deg);
-            }
-            100% {
-              transform: rotate(360deg);
-            }
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
           }
         `}
       </style>
@@ -58,4 +33,4 @@ const ComplexSpinner = () => {
   );
 };
 
-export default ComplexSpinner;
+export default Spinner;
