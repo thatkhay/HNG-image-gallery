@@ -69,25 +69,28 @@ const LoginPage = () => {
           flexDirection: 'column',
         }}
       >
-        <AppBar position="static">
-          <Toolbar>
+         <AppBar position="static" style={{backgroundColor: 'black'}}>
+          <Toolbar style={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
             <Typography variant="h6">Nature and Animal Image Gallery</Typography>
           </Toolbar>
         </AppBar>
 
         <Container style={{ marginTop: '2rem' }}>
-          <Typography variant="h4" gutterBottom>
-            Welcome to our Nature and Animal Image Gallery
-          </Typography>
-          <Typography variant="body1">
-            Explore the beauty of nature and the fascinating world of animals through our stunning image gallery. Immerse yourself in breathtaking landscapes, wildlife portraits, and captivating moments captured by talented photographers from around the globe.
-          </Typography>
-          <Typography variant="body1" style={{ marginTop: '1rem' }}>
-            Whether you have a passion for wildlife photography or simply appreciate the wonders of the natural world, you'll find a diverse collection of images that celebrate the Earth's rich biodiversity and scenic landscapes.
-          </Typography>
+          <Container>
+  <Typography variant="h4" gutterBottom>
+    Welcome to our Seasons Image Gallery
+  </Typography>
+  <Typography variant="body1">
+    Explore the enchanting beauty of the four seasons through our stunning image gallery. Immerse yourself in the ever-changing landscapes, vibrant colors, and unique atmospheres that each season brings.
+  </Typography>
+  <Typography variant="body1" style={{ marginTop: '1rem' }}>
+    Whether you enjoy the blooming flowers of spring, the warmth of summer, the colorful foliage of autumn, or the serene snowscapes of winter, you'll find a diverse collection of images that capture the essence of each season's charm.
+  </Typography>
+</Container>
+
         </Container>
 
-        <Container component="main" maxWidth="xs">
+        <Container component="main" maxWidth="xs" style={{marginTop: '2rem'}}>
           <Paper elevation={3} style={{ padding: '2rem', textAlign: 'center' }}>
             <Typography variant="h5">Login</Typography>
             {/* Conditional rendering based on loading state */}
@@ -124,6 +127,7 @@ const LoginPage = () => {
                       id="password"
                       autoComplete="current-password"
                       onChange={handleInput}
+                      
                     />
                   </Grid>
                 </Grid>
@@ -132,7 +136,7 @@ const LoginPage = () => {
                   fullWidth
                   variant="contained"
                   color="primary"
-                  style={{ marginTop: '2rem' }}
+                  style={{ marginTop: '2rem' , backgroundColor: 'black'}}
                 >
                   Sign In
                 </Button>

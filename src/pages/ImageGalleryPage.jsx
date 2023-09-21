@@ -8,9 +8,8 @@ import {
   Toolbar,
   Typography,
 } from '@mui/material';
-import ComplexSpinner from '../components/Spinner';
-
-// Import your image assets here
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import Fall from '../assets/fall.jpg';
 import Winter from '../assets/winter.jpg';
 import Summer from '../assets/summer.jpg';
@@ -24,20 +23,21 @@ import WinterThree from '../assets/winter3.jpg';
 import SummerThree from '../assets/summer3.jpg';
 import SpringThree from '../assets/spring3.jpg';
 import Spinner from '../components/Spinner';
+import { useMediaQuery } from '@mui/material';
 
 const initialImages = [
-  { id: 'fall', src: Fall, alt: 'Fall', tag: 'fall' },
-  { id: 'winter', src: Winter, alt: 'Winter', tag: 'winter' },
-  { id: 'summer', src: Summer, alt: 'Summer', tag: 'summer' },
-  { id: 'spring', src: Spring, alt: 'Spring', tag: 'spring' },
-  { id: 'fall2', src: FallTwo, alt: 'Fall 2', tag: 'fall' },
-  { id: 'winter2', src: WinterTwo, alt: 'Winter 2', tag: 'winter' },
-  { id: 'summer2', src: SummerTwo, alt: 'Summer 2', tag: 'summer' },
-  { id: 'spring2', src: SpringTwo, alt: 'Spring 2', tag: 'spring' },
-  { id: 'fall3', src: FallThree, alt: 'Fall 3', tag: 'fall' },
-  { id: 'winter3', src: WinterThree, alt: 'Winter 3', tag: 'winter' },
-  { id: 'summer3', src: SummerThree, alt: 'Summer 3', tag: 'summer' },
-  { id: 'spring3', src: SpringThree, alt: 'Spring 3', tag: 'spring' },
+  { id: 'fall', src: Fall, alt: 'Fall', tag: 'Autumn' },
+  { id: 'winter', src: Winter, alt: 'Winter', tag: 'Winter' },
+  { id: 'summer', src: Summer, alt: 'Summer', tag: 'Summer' },
+  { id: 'spring', src: Spring, alt: 'Spring', tag: 'Spring' },
+  { id: 'fall2', src: FallTwo, alt: 'Fall 2', tag: 'Autumn' },
+  { id: 'winter2', src: WinterTwo, alt: 'Winter 2', tag: 'Winter' },
+  { id: 'summer2', src: SummerTwo, alt: 'Summer 2', tag: 'Summer' },
+  { id: 'spring2', src: SpringTwo, alt: 'Spring 2', tag: 'Spring' },
+  { id: 'fall3', src: FallThree, alt: 'Fall 3', tag: 'Autumn' },
+  { id: 'winter3', src: WinterThree, alt: 'Winter 3', tag: 'Winter' },
+  { id: 'summer3', src: SummerThree, alt: 'Summer 3', tag: 'Summer' },
+  { id: 'spring3', src: SpringThree, alt: 'Spring 3', tag: 'Spring' },
 ];
 
 const Image = ({ src, alt, id, index, tag, handleDragEnd }) => {
@@ -101,6 +101,7 @@ const Image = ({ src, alt, id, index, tag, handleDragEnd }) => {
 };
 
 const DraggableImageGrid = () => {
+  const isSmallScreen = useMediaQuery('(max-width:600px)');
   const [images, setImages] = useState(initialImages);
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(false);
@@ -119,11 +120,11 @@ const DraggableImageGrid = () => {
   };
 
   const filteredImages = useCallback(() => {
-    if (!searchQuery) {
-      return images;
-    }
+    const filtered = images.filter((image) =>
+      image.tag.toLowerCase().includes(searchQuery.toLowerCase())
+    );
 
-    return images.filter((image) => image.alt.toLowerCase().includes(searchQuery.toLowerCase()));
+    return filtered;
   }, [images, searchQuery]);
 
   const handleSearch = () => {
@@ -132,73 +133,106 @@ const DraggableImageGrid = () => {
     // Simulate loading delay (You can remove this if you want instant results)
     setTimeout(() => {
       setLoading(false);
-    }, 3000); // Simulate loading delay of 3 seconds
+    }, 2000); // Simulate loading delay of 2 seconds
   };
 
   const handleInputChange = (e) => {
-    setSearchQuery(e.target.value);
+    const query = e.target.value.toLowerCase(); // Convert to lowercase
+    setSearchQuery(query);
 
-    // Trigger search when the input value changes
+    // Trigger search when the input value changes and display "Not Found" notification if needed
     handleSearch();
+
+    if (query.trim() !== '' && filteredImages().length === 0) {
+      toast.error('No images found for the given search query', {
+        autoClose: 2000,
+      });
+    }
   };
 
   return (
     <DndContext onDragEnd={onDragEnd}>
-      <Container
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          flexDirection: 'column',
-        }}
-      >
-        <AppBar position="static">
-          <Toolbar>
-            <Typography variant="h6">Nature and Animal Image Gallery</Typography>
-          </Toolbar>
-        </AppBar>
-        <TextField
-          label="Search Images"
-          variant="outlined"
-          fullWidth
-          value={searchQuery}
-          onChange={handleInputChange} // Trigger search on input change
-          style={{ marginTop: '1rem', width: '50%', marginBottom: '2rem' }}
-        />
-      </Container>
-      <div>
+      <Container>
         <Container
           style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
-            gap: '1rem',
-            margin: '0 auto',
-            width: '100%',
-            maxWidth: '700px',
-            height: '110vh',
-            border: '2px solid black',
-            padding: '1rem',
-            backgroundColor: 'skyblue',
-            borderRadius: '.6rem',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            flexDirection: 'column',
           }}
         >
-          {loading ? (
-            <ComplexSpinner /> // Show the spinner while loading
-          ) : (
-            filteredImages().map((image, index) => (
-              <Image
-                key={`image-${index}`}
-                src={image.src}
-                alt={image.alt}
-                id={image.id}
-                tag={image.tag}
-                index={index}
-                handleDragEnd={onDragEnd}
-              />
-            ))
-          )}
+          <AppBar position="static" style={{ backgroundColor: 'black' }}>
+            <Toolbar
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <Typography variant="h6">Nature and Animal Image Gallery</Typography>
+            </Toolbar>
+          </AppBar>
+          <Container style={{ margin: '2rem 0' }}>
+            <Typography variant="h4" gutterBottom>
+              Welcome to our Seasons Image Gallery
+            </Typography>
+            <Typography variant="body1">
+              Step into the enchanting world of the four seasons through our captivating image gallery. Each season paints a unique canvas on the Earth's tapestry, offering a kaleidoscope of sights and sensations for you to explore.
+            </Typography>
+            <Typography variant="body1" style={{ marginTop: '1rem' }}>
+              As you journey through this gallery, you'll find yourself immersed in the vivid colors of spring, where blossoms burst forth in a symphony of life. Feel the warmth of the summer sun, inviting you to bask in its golden glow, as you discover images of sun-kissed landscapes and beachside escapes.
+            </Typography>
+            <Typography variant="body1" style={{ marginTop: '1rem' }}>
+              Autumn unveils a mesmerizing display of nature's artistry, with trees adorned in hues of red, orange, and gold. Each falling leaf tells a story of transition and transformation. Finally, brace yourself for the serene beauty of winter, where landscapes are blanketed in a pure, crystalline white, and the world seems to hush in peaceful stillness.
+            </Typography>
+            <Typography variant="body1" style={{ marginTop: '1rem' }}>
+              Whether you're a nature enthusiast, a photography aficionado, or simply someone who finds solace and wonder in the changing seasons, our gallery is a visual journey through the cyclical wonders of nature. These images, captured by talented photographers from around the world, invite you to embrace the essence of each season and appreciate the ever-changing beauty of our planet.
+            </Typography>
+          </Container>
+          <TextField
+            label="Search Images"
+            variant="outlined"
+            fullWidth
+            value={searchQuery}
+            onChange={handleInputChange}
+            style={{ marginTop: '1rem', width: '50%', marginBottom: '2rem' }}
+          />
         </Container>
-      </div>
+        <div>
+          <Container
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
+              gap: '1rem',
+              margin: '0 auto',
+              width: '100%',
+              maxWidth: !isSmallScreen ? '90%' : '700px',
+              height: 'auto',
+              border: '2px solid black',
+              padding: '1rem',
+              backgroundColor: 'skyblue',
+              borderRadius: '.6rem',
+            }}
+          >
+            {loading ? (
+              <Spinner />
+            ) : (
+              filteredImages().map((image, index) => (
+                <Image
+                  key={`image-${index}`}
+                  src={image.src}
+                  alt={image.alt}
+                  id={image.id}
+                  tag={image.tag}
+                  index={index}
+                  handleDragEnd={onDragEnd}
+                />
+              ))
+            )}
+          </Container>
+        </div>
+      </Container>
+      <ToastContainer position="top-right" autoClose={2000} />
     </DndContext>
   );
 };

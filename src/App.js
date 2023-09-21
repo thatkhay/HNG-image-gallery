@@ -3,6 +3,8 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import ImageGalleryPage from './pages/ImageGalleryPage';
 import LoginPage from './pages/LoginPage';
 import SignInPage from './pages/SignInPage';
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from 'react-toastify';
 
 function App() {
   return (
@@ -14,6 +16,7 @@ function App() {
           <Route path="/image-gallery" element={<ImageGalleryPage/>} />
         </Routes>
       </Router>
+      <ToastContainer />
     </div>
   );
 }

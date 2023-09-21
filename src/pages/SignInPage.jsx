@@ -94,12 +94,12 @@ const SignInPage = () => {
           flexDirection: 'column',
         }}
       >
-        <AppBar position="static">
-          <Toolbar>
+         <AppBar position="static" style={{backgroundColor: 'black'}}>
+          <Toolbar style={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
             <Typography variant="h6">Nature and Animal Image Gallery</Typography>
           </Toolbar>
         </AppBar>
-
+        
         <Container style={{ marginTop: '2rem' }}>
           <Typography variant="h4" gutterBottom>
             Welcome to our Nature and Animal Image Gallery
