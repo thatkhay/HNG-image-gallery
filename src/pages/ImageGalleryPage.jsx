@@ -169,12 +169,13 @@ const DraggableImageGrid = () => {
                 justifyContent: 'center',
               }}
             >
-              <Typography variant="h6">Nature and Animal Image Gallery</Typography>
+              <Typography variant="h6">Seasons Image  Gallery</Typography>
             </Toolbar>
           </AppBar>
           <Container style={{ margin: '2rem 0' }}>
             <Typography variant="h4" gutterBottom>
-              Welcome to our Seasons Image Gallery
+              Welcome to our Seasons Image Gallery <span></span>
+
             </Typography>
             <Typography variant="body1">
               Step into the enchanting world of the four seasons through our captivating image gallery. Each season paints a unique canvas on the Earth's tapestry, offering a kaleidoscope of sights and sensations for you to explore.
