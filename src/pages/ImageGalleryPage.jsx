@@ -24,6 +24,7 @@ import SummerThree from '../assets/summer3.jpg';
 import SpringThree from '../assets/spring3.jpg';
 import Spinner from '../components/Spinner';
 import { useMediaQuery } from '@mui/material';
+import Footer from '../components/Footer';
 
 const initialImages = [
   { id: 'fall', src: Fall, alt: 'Fall', tag: 'Autumn' },
@@ -232,7 +233,9 @@ const DraggableImageGrid = () => {
             )}
           </Container>
         </div>
+     
       </Container>
+         <Footer />
       <ToastContainer position="top-right" autoClose={2000} />
     </DndContext>
   );
