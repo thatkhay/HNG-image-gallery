@@ -12,12 +12,14 @@ import {
 import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom'; // Import useNavigate
 import Footer from '../components/Footer';
-import { app } from '../firebaseConfig';
+// import { app } from '../firebaseConfig';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import  { toast } from 'react-toastify'
 import Spinner from '../components/Spinner';
+// import { auth } from '../firebaseConfig';
 
 const LoginPage = () => {
+ 
   const auth = getAuth();
   const navigate = useNavigate(); // Initialize useNavigate
 
@@ -29,23 +31,32 @@ const LoginPage = () => {
     setData({ ...data, ...newInput });
   };
 
-  const handleFormSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true); // Set loading state to true
+ const handleFormSubmit = async (e) => {
+  e.preventDefault();
+  setLoading(true);
 
-    try {
-      await signInWithEmailAndPassword(auth, data.email, data.password);
+  try {
+    await signInWithEmailAndPassword(auth, data.email, data.password);
+
+    const user = auth.currentUser; // Get the user after signing in
+
+    if (user) {
       console.log('signed in');
-      // Navigate to image gallery page upon successful login
       navigate('/image-gallery');
-    } catch (error) {
-      console.log(error);
-      toast.error('invalid credentials')
-    } finally {
-      setLoading(false); // Set loading state to false when done
+      toast.info(` Welcome ${user.displayName}`);
+    } else {
+      toast.error('User not found');
     }
-  };
+  } catch (error) {
+    console.log(error);
+    toast.error('Invalid credentials');
+  } finally {
+    setLoading(false);
+  }
+};
 
+// eslint-disable-next-line no-unused-vars
+const user = auth.currentUser;
   return (
     <motion.div
       initial={{ opacity: 0 }}

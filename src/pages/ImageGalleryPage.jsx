@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { DndContext, useDraggable, useDroppable } from '@dnd-kit/core';
 import { CSS } from '@dnd-kit/utilities';
 import {
@@ -26,6 +26,7 @@ import Spinner from '../components/Spinner';
 import { useMediaQuery } from '@mui/material';
 import Footer from '../components/Footer';
 import { Link } from 'react-router-dom';
+import { auth } from '../firebaseConfig';
 
 const initialImages = [
   { id: 'fall', src: Fall, alt: 'Fall', tag: 'Autumn' },
@@ -107,6 +108,7 @@ const DraggableImageGrid = () => {
   const [images, setImages] = useState(initialImages);
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null);
 
   const onDragEnd = ({ active, over }) => {
     if (active && over && active.id !== over.id) {
@@ -120,6 +122,22 @@ const DraggableImageGrid = () => {
       setImages(updatedImages);
     }
   };
+const user = auth.currentUser;
+
+ const handleLogout = async () => {
+  try {
+    await auth.signOut(); 
+    if (user) {
+      toast.info(`Bye ${user.displayName}, Logged out successfully`);
+    } else {
+      toast.info('Logged out successfully');
+    }
+    console.log('logged out successfully');
+  } catch (error) {
+    console.error('Error logging out:', error.message);
+  }
+};
+
 
   const filteredImages = useCallback(() => {
     const filtered = images.filter((image) =>
@@ -152,6 +170,10 @@ const DraggableImageGrid = () => {
     }
   };
 
+  useEffect(() => { setCurrentUser(user); }, [user]);
+
+  
+
   return (
     <DndContext onDragEnd={onDragEnd}>
       <Container>
@@ -176,7 +198,7 @@ const DraggableImageGrid = () => {
           </AppBar>
           <Container style={{ margin: '2rem 0' }}>
             <Typography variant="h4" gutterBottom>
-              Welcome to our Seasons Image Gallery <span></span>
+              Welcome to our Seasons Image Gallery, <span style={{color: 'skyblue', fontWeight: 'bold'}}>{currentUser ? currentUser.displayName : ''}. </span>
 
             </Typography>
             <Typography variant="body1">
@@ -211,7 +233,7 @@ const DraggableImageGrid = () => {
               width: '100%',
               maxWidth: !isSmallScreen ? '90%' : '700px',
               height: 'auto',
-              border: '2px solid black',
+  
               padding: '1rem',
               backgroundColor: 'skyblue',
               borderRadius: '.6rem',
@@ -234,7 +256,7 @@ const DraggableImageGrid = () => {
             )}
           </Container>
         </div>
-     <button style={{height: '2rem', width: '4rem', color: 'white', backgroundColor: 'black', margin: '2rem 0', border: 'none', borderRadius: '.2rem' }}>
+     <button style={{height: '2rem', width: '4rem', color: 'white', backgroundColor: 'black', margin: '2rem 0', border: 'none', borderRadius: '.2rem' }} onClick={handleLogout}>
       <Link to='/' style={{textDecoration: 'none', color: 'inherit'}}>log out</Link>
      </button>
       </Container>

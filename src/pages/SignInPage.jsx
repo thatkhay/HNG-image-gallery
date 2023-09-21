@@ -10,12 +10,16 @@ import {
   Toolbar,
 } from '@mui/material';
 import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Footer from '../components/Footer';
-import { app } from '../firebaseConfig'
+// import { app } from '../firebaseConfig'
 import { getAuth, createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
+import { toast } from 'react-toastify';
+
 
 const SignInPage = () => {
+  const navigate  = useNavigate();
+
   let auth = getAuth();
   const [data, setData] = useState({
     email: '',
@@ -34,10 +38,13 @@ const SignInPage = () => {
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
-
+if (data.password.length < 6) {
+  setPasswordsMatchError('Passwords Chatacters must be at least 6');
+      return toast.error('Passwords Chatacters must be at least 6');
+}
     if (data.password !== data.confirmPassword) {
       setPasswordsMatchError('Passwords do not match');
-      return;
+      return toast.error('Passwords do not match');
     }
 
     try {
@@ -53,8 +60,9 @@ const SignInPage = () => {
           displayName: data.displayName,
         });
       }
-
+      navigate('/')
       console.log('User registered successfully');
+      toast.success('User registered successfully');
       // Redirect or perform other actions upon successful registration
     } catch (error) {
       console.error(error);
