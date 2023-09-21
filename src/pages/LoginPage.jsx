@@ -71,7 +71,7 @@ const LoginPage = () => {
       >
          <AppBar position="static" style={{backgroundColor: 'black'}}>
           <Toolbar style={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-            <Typography variant="h6">Nature and Animal Image Gallery</Typography>
+            <Typography variant="h6">Seasons Image Gallery</Typography>
           </Toolbar>
         </AppBar>
 

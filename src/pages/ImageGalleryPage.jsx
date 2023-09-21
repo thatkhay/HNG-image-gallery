@@ -25,6 +25,7 @@ import SpringThree from '../assets/spring3.jpg';
 import Spinner from '../components/Spinner';
 import { useMediaQuery } from '@mui/material';
 import Footer from '../components/Footer';
+import { Link } from 'react-router-dom';
 
 const initialImages = [
   { id: 'fall', src: Fall, alt: 'Fall', tag: 'Autumn' },
@@ -233,7 +234,9 @@ const DraggableImageGrid = () => {
             )}
           </Container>
         </div>
-     
+     <button style={{height: '2rem', width: '4rem', color: 'white', backgroundColor: 'black', margin: '2rem 0', border: 'none', borderRadius: '.2rem' }}>
+      <Link to='/' style={{textDecoration: 'none', color: 'inherit'}}>log out</Link>
+     </button>
       </Container>
          <Footer />
       <ToastContainer position="top-right" autoClose={2000} />
